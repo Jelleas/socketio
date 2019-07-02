@@ -2,6 +2,7 @@ lab50:
   cmd: "python3 -m pip install flask_socketio"
   files:
     - !exclude "*"
+    - !include chat/*
     - !include vote0/*
     - !include vote1/*
     - !include tictactoe/*
