@@ -2,8 +2,7 @@
 A game is a dictionary with the following structure:
 {
     board: [['X', '', ''], ['', 'O', ''], ['X', '', '']]
-    player1: player_foo
-    player2: player_bar
+    players: [player_foo, player_bar]
     turn: player_foo
 }
 """
@@ -13,7 +12,7 @@ GAMES = []
 def get_game(player_id):
     """Find the game in which player_id is playing."""
     for game in GAMES:
-        if game["player1"] == player_id or game["player2"] == player_id:
+        if player_id in game["players"]:
             return game
 
     return None
@@ -24,11 +23,15 @@ def join_game(player_id):
     If there is a game without a second player, have player_id join it.
     Otherwise, create a new game for player_id.
     """
+    # If player_id is already in a game, return that game
+    game = get_game(player_id)
+    if game != None:
+        return game
 
     # Find a game with only one player, and join it
     for game in GAMES:
-        if game["player2"] == None:
-            game["player2"] = player_id
+        if len(game["players"]) < 2:
+            game["players"].append(player_id)
             return game
 
     # Otherwise start a new game
@@ -38,10 +41,7 @@ def join_game(player_id):
     game["board"] = [["", "", ""] for i in range(3)]
 
     # Add current player as player1
-    game["player1"] = player_id
-
-    # Keep the second spot open
-    game["player2"] = None
+    game["players"] = [player_id]
 
     # Player1 gets to start
     game["turn"] = player_id
@@ -55,6 +55,6 @@ def join_game(player_id):
 def remove_game(player_id):
     """Remove the game player_id is playing in."""
     for i in range(len(GAMES)):
-        if game["player1"] == player_id or game["player2"] == player_id:
+        if player_id in GAMES[i]["players"]:
             del GAMES[i]
             return

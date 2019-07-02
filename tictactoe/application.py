@@ -16,6 +16,8 @@ def index():
 
 @socketio.on("join_game")
 def join_game():
+    """Have the player join a game."""
+
     # Get the player id
     player_id = request.sid
 
@@ -23,17 +25,19 @@ def join_game():
     game = lobby.join_game(request.sid)
 
     # Let each player know which game she is in
-    for player in game.players:
+    for player in game["players"]:
         socketio.emit("joined_game",
                      {
                           "board": game["board"],
-                          "is_waiting": game["player1"] == None or game["player2"] == None
+                          "is_waiting": len(game["players"]) < 2,
                      },
                      room=player)
 
 
 @socketio.on("disconnect")
 def disconnect():
+    """In case a player disconnected, let the other player know and remove game"""
+
     # Get the player id
     player_id = request.sid
 
@@ -45,10 +49,10 @@ def disconnect():
         return
 
     # Otherwise, find the other player
-    if game.player1 != player_id:
-        other_player_id = game.player1
+    if game["players"][0] != player_id:
+        other_player_id = game["players"][0]
     else:
-        other_player_id = game.player2
+        other_player_id = game["players"][1]
 
     # Let her know her opponent has disconnected
     socketio.emit("disconnected", room=other_player_id)
@@ -59,8 +63,12 @@ def disconnect():
 
 @socketio.on("place_tile")
 def place(data):
+    """Place a tile on the board."""
+
+    # Get the player id
     player_id = request.sid
 
+    # Get the current game & board
     game = lobby.get_game(player_id)
     board = game["board"]
 
@@ -69,7 +77,7 @@ def place(data):
 
     # TODO
 
-    for player in [game["player1"], game["player2"]]:
+    for player in game["players"]:
         socketio.emit("placed_tile",
                       {
                         "x": x,
