@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let input = document.getElementById('chat');
         input.onkeydown = (event) => {
           if(event.key === 'Enter') {
-             socket.emit('messaged', {'message': input.value});
-            input.value = '';
+             // TODO
+             // Use socket.emit to send input.value to the server
           }
         }
     });
@@ -31,9 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#maybe').innerHTML = data.maybe;
     });
   
-    // When a new message has been sent, update message display
-    socket.on('display', data => {
-      document.getElementById('text-display').textContent = data;
-    })
+    // TODO
+    // Using socket.on, update display when a new message has been received from the server
   
 });
