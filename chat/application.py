@@ -23,8 +23,7 @@ def vote(data):
     votes[selection] += 1
     emit("vote totals", votes, broadcast=True)
     
-    
-@socketio.on("messaged")
-def messaged(data):
-    messages.append(data["message"])
-    emit("display", messages, broadcast=True)
+
+# TODO
+# Using @socketio.on, listen for an event to receive a message from the user
+# Append the message to the messages list and emit an event to display the message list
