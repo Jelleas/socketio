@@ -19,7 +19,5 @@ def index():
 @socketio.on("submit vote")
 def vote(data):
     selection = data["selection"]
-    print(selection)
     votes[selection] += 1
-    print(votes)
     emit("vote totals", votes, broadcast=True)
