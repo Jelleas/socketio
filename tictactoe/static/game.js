@@ -5,18 +5,20 @@ for (let html_tile of document.getElementsByClassName("tile")) {
 
         // Extract the coordinates from tile
         let coords = event.target.id;
-        let x = coords[0];
-        let y = coords[1];
+        let x = parseInt(coords[0]);
+        let y = parseInt(coords[1]);
 
         console.log("button pressed at", x, y);
 
-        // TODO
         socket.emit("place_tile", {"x": x, "y": y});
     });
 }
 
-// TODO
 socket.on("placed_tile", (data) => {
+    // TODO
+    // Extract board from data
+    // call 'draw(data["board"])'
+
     write_to_left_display(`Tile placed at ${data["x"]} ${data["y"]}`)
 });
 

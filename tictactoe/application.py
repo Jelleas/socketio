@@ -76,6 +76,8 @@ def place(data):
     y = data["y"]
 
     # TODO
+    # add a tile on the board
+    # emit the board through the socket
 
     for player in game["players"]:
         socketio.emit("placed_tile",
