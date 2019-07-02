@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO
-import model
+import lobby
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -20,7 +20,7 @@ def join_game():
     player_id = request.sid
 
     # Join a new game
-    game = model.join_game(request.sid)
+    game = lobby.join_game(request.sid)
 
     # Let each player know which game she is in
     for player in game.players:
@@ -38,7 +38,7 @@ def disconnect():
     player_id = request.sid
 
     # Get the current game
-    game = model.get_game(player_id)
+    game = lobby.get_game(player_id)
 
     # If no game is being played, nothing to do
     if game == None:
@@ -54,17 +54,25 @@ def disconnect():
     socketio.emit("disconnected", room=other_player_id)
 
     # Remove the game from the server
-    model.remove_game(player_id)
+    lobby.remove_game(player_id)
 
 
 @socketio.on("place_tile")
 def place(data):
     player_id = request.sid
 
-    game = model.get_game(player_id)
+    game = lobby.get_game(player_id)
     board = game["board"]
 
     x = data["x"]
     y = data["y"]
 
     # TODO
+
+    for player in [game["player1"], game["player2"]]:
+        socketio.emit("placed_tile",
+                      {
+                        "x": x,
+                        "y": y
+                      },
+                      room=player)
