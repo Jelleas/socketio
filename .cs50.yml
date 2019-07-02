@@ -1,0 +1,7 @@
+lab50:
+  cmd: alias flask run="flask run --no-reload"; pip install flask_socketio
+  files:
+    - !exclude "*"
+    - !include vote0/*
+    - !include vote1/*
+    - !include tictactoe/*
